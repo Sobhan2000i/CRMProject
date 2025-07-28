@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CRMProject.DataBase.Configurations
 {
-    public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
+    public sealed class TicketConfiguration : IEntityTypeConfiguration<Ticket>
     {
         public void Configure(EntityTypeBuilder<Ticket> builder)
         {

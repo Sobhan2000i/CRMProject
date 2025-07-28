@@ -1,6 +1,6 @@
 ﻿namespace CRMProject.Entities
 {
-    public class Ticket
+    public sealed class Ticket
     {
         public int TicketId { get; set; }
         public string? Title { get; set; }

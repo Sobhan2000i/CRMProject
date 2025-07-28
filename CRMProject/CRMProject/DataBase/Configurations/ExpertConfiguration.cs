@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CRMProject.DataBase.Configurations
 {
-    public class ExpertConfiguration : IEntityTypeConfiguration<ExpertNote>
+    public sealed class ExpertConfiguration : IEntityTypeConfiguration<ExpertNote>
     {
         public void Configure(EntityTypeBuilder<ExpertNote> builder)
         {

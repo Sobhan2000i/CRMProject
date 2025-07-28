@@ -1,6 +1,6 @@
 ﻿namespace CRMProject.Entities
 {
-    public class ExpertNote
+    public sealed class ExpertNote
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
