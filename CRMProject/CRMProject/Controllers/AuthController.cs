@@ -42,7 +42,19 @@ namespace CRMProject.Controllers
 
             if (!identityResult.Succeeded)
             {
-                return BadRequest(identityResult.Errors);
+                var extensions = new Dictionary<string, object?>
+            {
+                {
+                    "errors",
+                    identityResult.Errors.ToDictionary(e => e.Code , e => e.Description)
+
+                }
+            };
+                return Problem(
+                    detail: "Unable to register user, please try again",
+                    statusCode: StatusCodes.Status400BadRequest,
+                    extensions: extensions
+                    );
             }
 
             User user = registerUserDto.ToEntity();
@@ -51,7 +63,7 @@ namespace CRMProject.Controllers
             applicationDbContext.Users.Add(user);
             await applicationDbContext.SaveChangesAsync();
 
-            var tokenReuest = new TokenRequest(identityUser.Id, identityUser.Email);
+            var tokenReuest = new TokenRequest(identityUser.Id, identityUser.UserName);
             var accessTokens = tokenProvider.Create(tokenReuest);
 
            
@@ -61,6 +73,24 @@ namespace CRMProject.Controllers
 
 
             return Ok(accessTokens);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<AccessTokenDto>> Login(
+            LoginUserDto loginUserDto)
+        {
+
+            IdentityUser? identityUser = await userManager.FindByNameAsync(loginUserDto.UserName);
+
+            if (identityUser is null || !await userManager.CheckPasswordAsync(identityUser, loginUserDto.Password))
+            {
+                return Unauthorized();
+            }
+
+            var tokenRequest = new TokenRequest(identityUser.Id, identityUser.UserName!);
+            AccessTokenDto accessToken = tokenProvider.Create(tokenRequest);
+
+            return Ok(accessToken);
         }
     }
 }
